@@ -1,0 +1,791 @@
+/*
+ * FLOAT — styles for both hosts (PiP window and inline fallback).
+ * Everything is scoped under .float-root so nothing leaks into Spotify.
+ * Measurements follow the Figma file "Specitify plug" (frames 5:37 / 5:38).
+ */
+
+.float-root {
+  --fl-canvas: #0b0f12;
+  --fl-surface: #171d21;
+  --fl-raised: #252d32;
+  --fl-edge: #384248;
+  --fl-primary: #f4f7f7;
+  --fl-secondary: #afb9bd;
+  --fl-muted: #829096;
+  --fl-accent: #68d9c4;
+
+  --fl-radius-control: 8px;
+  --fl-radius-artwork: 12px;
+  --fl-radius-panel: 20px;
+
+  --fl-hover: 120ms;
+  --fl-expand: 220ms;
+
+  container-type: size;
+  box-sizing: border-box;
+  color: var(--fl-primary);
+  font: 400 14px/21px 'Float Inter', Inter, 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0;
+  text-align: start;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.float-root *,
+.float-root *::before,
+.float-root *::after {
+  box-sizing: border-box;
+}
+
+.float-root button {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.float-root p,
+.float-root h1,
+.float-root ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.float-root :focus-visible {
+  outline: 2px solid var(--fl-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Hosts ---------- */
+
+/* PiP: the browser owns the frame; we fill the content viewport. */
+html:has(> body > .float-root--pip),
+html:has(> body > .float-root--pip) > body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #0b0f12;
+}
+
+.float-root--pip {
+  width: 100%;
+  height: 100%;
+}
+
+/* Inline fallback: docked above Spotify's playbar. */
+.float-root--inline {
+  position: fixed;
+  right: 16px;
+  bottom: 104px;
+  z-index: 9999;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 120px);
+}
+
+.fl-app {
+  width: 100%;
+  height: 100%;
+}
+
+/* Center the dock in whatever space the browser gives us; never crop it. */
+.fl-app--compact {
+  display: grid;
+  place-items: center;
+  background: var(--fl-canvas);
+}
+
+.float-root--inline .fl-app--compact {
+  background: none;
+}
+
+/* ---------- Icon button ---------- */
+
+.fl-btn {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--fl-radius-control);
+  color: var(--fl-primary);
+  transition:
+    background-color var(--fl-hover),
+    opacity var(--fl-hover);
+}
+
+.float-root .fl-btn--raised {
+  background: var(--fl-raised);
+}
+
+.float-root .fl-btn--accent {
+  color: var(--fl-accent);
+}
+
+.float-root .fl-btn:hover:not(:disabled) {
+  background: var(--fl-raised);
+}
+
+.float-root .fl-btn--raised:hover:not(:disabled) {
+  background: var(--fl-edge);
+}
+
+.float-root .fl-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* The exported SVG is used as a mask so one asset can take any state color. */
+.fl-icon {
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  -webkit-mask: var(--fl-icon) center / 18px 18px no-repeat;
+  mask: var(--fl-icon) center / 18px 18px no-repeat;
+}
+
+.fl-btn__badge {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-weight: 600;
+  font-size: 8px;
+  line-height: 8px;
+}
+
+/* Tooltip: appears 500 ms after hover or keyboard focus. */
+.fl-tip {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: var(--fl-raised);
+  box-shadow: 0 0 0 1px var(--fl-edge);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--fl-hover),
+    visibility var(--fl-hover);
+}
+
+.fl-btn:hover .fl-tip,
+.fl-btn:focus-visible .fl-tip {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 500ms;
+}
+
+.fl-tip--above {
+  bottom: calc(100% + 6px);
+}
+
+.fl-tip--below {
+  top: calc(100% + 6px);
+}
+
+.fl-tip--center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.fl-tip--start {
+  left: 0;
+}
+
+.fl-tip--end {
+  right: 0;
+}
+
+.fl-tip__label {
+  color: var(--fl-primary);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.fl-tip__key {
+  color: var(--fl-secondary);
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 15px;
+}
+
+/* ---------- Artwork ---------- */
+
+.fl-art {
+  display: block;
+  flex: none;
+  border-radius: var(--fl-radius-artwork);
+  background: var(--fl-raised);
+  object-fit: cover;
+}
+
+/* ---------- Compact dock: 216 × 48 ---------- */
+
+.fl-dock {
+  position: relative;
+  display: flex;
+  flex: none;
+  gap: 4px;
+  align-items: center;
+  width: 216px;
+  height: 48px;
+  padding-left: 9px;
+  border: 1px solid var(--fl-edge);
+  border-radius: 999px;
+  background: var(--fl-surface);
+  filter: drop-shadow(0 8px 12px rgb(0 0 0 / 24%));
+  animation: fl-enter var(--fl-expand) ease-out;
+}
+
+.fl-dock .fl-art {
+  width: 28px;
+  height: 28px;
+}
+
+.fl-dock.is-idle .fl-art {
+  opacity: 0.35;
+}
+
+.fl-dock__divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 7px 0 4px;
+  background: var(--fl-edge);
+}
+
+/* Non-color cue that audio is playing. */
+.fl-dock__indicator {
+  position: absolute;
+  top: 38px;
+  left: 11px;
+  width: 24px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--fl-accent);
+}
+
+/* ---------- Shared text styles ---------- */
+
+.fl-caption {
+  color: var(--fl-muted);
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 15px;
+  text-transform: uppercase;
+  white-space: pre;
+}
+
+/* ---------- Expanded player ---------- */
+
+.fl-player {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  background: var(--fl-surface);
+  animation: fl-enter var(--fl-expand) ease-out;
+}
+
+.float-root--inline .fl-player {
+  border: 1px solid var(--fl-edge);
+  border-radius: var(--fl-radius-panel);
+  box-shadow: 0 14px 18px rgb(0 0 0 / 30%);
+}
+
+.fl-player__eyebrow {
+  grid-area: eyebrow;
+}
+
+.fl-player__now {
+  grid-area: now;
+  min-width: 0;
+}
+
+.fl-player__meta {
+  min-width: 0;
+}
+
+.fl-player__title,
+.fl-player__artist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fl-player__title {
+  color: var(--fl-primary);
+  font-weight: 600;
+}
+
+.fl-player__artist {
+  color: var(--fl-secondary);
+}
+
+.fl-player__collapse {
+  grid-area: collapse;
+  align-self: start;
+  justify-self: end;
+}
+
+.fl-player__transport {
+  grid-area: transport;
+  align-self: start;
+  min-width: 0;
+}
+
+/* Wide: 760 × 436 — player on the left, lyrics on the right. */
+.fl-player--wide {
+  grid-template:
+    'eyebrow collapse' 54px
+    'now lyrics' auto
+    'transport lyrics' minmax(0, 1fr)
+    / 240px minmax(0, 1fr);
+  padding: 8px 24px 20px;
+}
+
+.fl-player--wide .fl-player__eyebrow {
+  margin-top: 10px;
+}
+
+.fl-player--wide .fl-art {
+  width: 152px;
+  height: 152px;
+}
+
+.fl-player--wide .fl-player__meta {
+  margin-top: 20px;
+}
+
+.fl-player--wide .fl-player__title {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.fl-player--wide .fl-player__artist {
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.fl-player--wide .fl-player__transport {
+  margin-top: 15px;
+}
+
+.fl-player--wide .fl-controls {
+  height: 40px;
+  margin-top: 28px;
+}
+
+/* Short wide windows drop the artwork before they would crop a control. */
+@container (max-height: 380px) {
+  .fl-player--wide .fl-art {
+    display: none;
+  }
+
+  .fl-player--wide .fl-player__meta {
+    margin-top: 0;
+  }
+}
+
+/* Narrow: 320 × 520 — lyrics first. */
+.fl-player--narrow {
+  grid-template:
+    'now collapse' auto
+    'lyrics lyrics' minmax(0, 1fr)
+    'transport transport' auto
+    / minmax(0, 1fr) auto;
+  padding: 20px 20px 14px;
+}
+
+.fl-player--narrow .fl-player__eyebrow {
+  display: none;
+}
+
+.fl-player--narrow .fl-player__now {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.fl-player--narrow .fl-art {
+  width: 40px;
+  height: 40px;
+}
+
+.fl-player--narrow .fl-player__title {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.fl-player--narrow .fl-player__artist {
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.fl-player--narrow .fl-player__collapse {
+  margin: -2px -4px 0 8px;
+}
+
+.fl-player--narrow .fl-player__transport {
+  margin-top: 12px;
+}
+
+.fl-player--narrow .fl-controls {
+  height: 32px;
+  margin-top: 8px;
+  padding: 0 20px;
+}
+
+/* ---------- Seek bar ---------- */
+
+.fl-seek__target {
+  position: relative;
+  height: 20px; /* 20 px hit area around a 3 px track */
+}
+
+.fl-seek__input {
+  display: block;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.fl-seek__input:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.fl-seek__input::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 1.5px;
+  background: linear-gradient(
+    to right,
+    var(--fl-accent) var(--fl-fill, 0%),
+    var(--fl-edge) var(--fl-fill, 0%)
+  );
+}
+
+.fl-seek__input::-webkit-slider-thumb {
+  width: 7px;
+  height: 7px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: var(--fl-primary);
+  transition: transform var(--fl-hover);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.fl-seek__target:hover .fl-seek__input:not(:disabled)::-webkit-slider-thumb,
+.fl-seek__input:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.6);
+}
+
+.fl-seek__bubble {
+  position: absolute;
+  bottom: calc(100% + 2px);
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--fl-raised);
+  box-shadow: 0 0 0 1px var(--fl-edge);
+  color: var(--fl-primary);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.fl-seek__times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  color: var(--fl-secondary);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Transport controls ---------- */
+
+.fl-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ---------- Lyrics ---------- */
+
+.fl-lyrics {
+  position: relative;
+  display: flex;
+  grid-area: lyrics;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.fl-lyrics__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 15px;
+}
+
+.fl-lyrics__live,
+.fl-lyrics__resume {
+  color: var(--fl-accent);
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 15px;
+  text-transform: uppercase;
+  white-space: pre;
+}
+
+.float-root .fl-lyrics__resume {
+  margin: -5px -8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--fl-edge);
+  text-transform: uppercase;
+  transition: background-color var(--fl-hover);
+}
+
+.float-root .fl-lyrics__resume:hover {
+  background: var(--fl-raised);
+}
+
+.fl-lyrics__scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  container-type: size;
+  scrollbar-width: none;
+  /* History fades toward the viewport edge. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+}
+
+.fl-lyrics__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.fl-lyrics__scroll:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Half a viewport of padding lets the first and last line reach the center. */
+.float-root .fl-lyrics__lines {
+  padding-block: 50cqh;
+}
+
+.float-root .fl-line {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+  color: var(--fl-muted);
+  font-weight: 600;
+  text-align: start;
+  overflow-wrap: anywhere;
+  transition:
+    color var(--fl-hover),
+    background-color var(--fl-hover);
+}
+
+.float-root .fl-line.is-near {
+  color: var(--fl-secondary);
+}
+
+.float-root .fl-line:hover:not(:disabled) {
+  color: var(--fl-primary);
+}
+
+.float-root .fl-line:disabled {
+  cursor: default;
+}
+
+.float-root .fl-line.is-current {
+  background: var(--fl-raised);
+  color: var(--fl-primary);
+}
+
+/* Current-line marker: a cue that does not rely on color alone. */
+.fl-line.is-current::before {
+  position: absolute;
+  left: 0;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--fl-accent);
+  content: '';
+}
+
+.fl-lyrics__message {
+  flex: 1;
+  color: var(--fl-secondary);
+}
+
+.fl-lyrics__foot {
+  flex: none;
+  min-height: 14px;
+  color: var(--fl-muted);
+  font-size: 10px;
+  line-height: 14px;
+}
+
+/* Wide lyrics: 22/32 lines in 48 px rows, 56 px for the current line. */
+.fl-player--wide .fl-lyrics {
+  margin-left: 24px;
+  padding-left: 24px;
+}
+
+.fl-player--wide .fl-lyrics::before {
+  position: absolute;
+  top: 0;
+  bottom: 14px;
+  left: 0;
+  width: 1px;
+  background: var(--fl-edge);
+  content: '';
+}
+
+.fl-player--wide .fl-lyrics__head {
+  margin-top: -1px;
+  padding: 0 32px 0 8px;
+}
+
+.fl-player--wide .fl-lyrics__live::before {
+  content: '•  ';
+}
+
+.fl-player--wide .fl-lyrics__scroll,
+.fl-player--wide .fl-lyrics__message {
+  margin-top: 23px;
+}
+
+.fl-player--wide .fl-lyrics__message {
+  padding: 0 8px;
+}
+
+.fl-player--wide .fl-line {
+  padding: 8px 16px;
+  font-size: 22px;
+  line-height: 32px;
+}
+
+.fl-player--wide .fl-line.is-current {
+  padding-block: 12px;
+}
+
+.fl-player--wide .fl-line.is-current::before {
+  top: 17px;
+  bottom: 17px;
+}
+
+.fl-player--wide .fl-lyrics__foot {
+  margin-top: 5px;
+  padding-left: 8px;
+}
+
+/* Narrow lyrics: 24/34 current, 20/28 neighbours, 18/24 beyond. */
+.fl-player--narrow .fl-lyrics {
+  margin-top: 18px;
+  border-top: 1px solid var(--fl-edge);
+}
+
+.fl-player--narrow .fl-lyrics__head {
+  margin-top: 17px;
+}
+
+.fl-player--narrow .fl-lyrics__scroll {
+  margin: 12px -8px 0;
+}
+
+.fl-player--narrow .fl-lyrics__message {
+  margin-top: 21px;
+}
+
+.fl-player--narrow .fl-line {
+  padding: 8px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.fl-player--narrow .fl-line.is-near {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.fl-player--narrow .fl-line.is-current {
+  margin-block: 6px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 34px;
+}
+
+.fl-player--narrow .fl-line.is-current::before {
+  top: 16px;
+  bottom: 16px;
+}
+
+.fl-player--narrow .fl-lyrics__foot {
+  display: none;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes fl-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/* Reduced motion: no transforms or scrolling; state changes are instant. */
+@media (prefers-reduced-motion: reduce) {
+  .float-root *,
+  .float-root *::before,
+  .float-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Window dragging (PiP) ---------- */
+
+/*
+ * Any empty part of the surface moves the window. Drag regions swallow
+ * pointer input, so everything interactive opts back out.
+ */
+.float-root--pip .fl-app {
+  -webkit-app-region: drag;
+}
+
+.float-root--pip .fl-btn,
+.float-root--pip .fl-seek,
+.float-root--pip .fl-lyrics__scroll,
+.float-root--pip .fl-lyrics__resume {
+  -webkit-app-region: no-drag;
+}
