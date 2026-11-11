@@ -2,7 +2,7 @@
   {
     "name": "FLOAT",
     "description": "A minimal always-on-top Spotify player with playback controls and synchronized lyrics.",
-    "preview": "preview.svg",
+    "preview": "preview.png",
     "main": "float.js",
     "readme": "README.md",
     "branch": "marketplace",

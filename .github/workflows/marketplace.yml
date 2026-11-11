@@ -11,7 +11,7 @@ on:
       - 'tsconfig.json'
       - 'README.md'
       - 'manifest.json'
-      - 'preview.svg'
+      - 'preview.png'
       - '.github/workflows/marketplace.yml'
   workflow_dispatch:
 permissions:
@@ -39,12 +39,12 @@ jobs:
           set -euo pipefail
           test -s dist/float.js
           mkdir -p "$RUNNER_TEMP/float-release"
-          cp dist/float.js manifest.json preview.svg README.md "$RUNNER_TEMP/float-release/"
+          cp dist/float.js manifest.json preview.png README.md "$RUNNER_TEMP/float-release/"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout --orphan marketplace
           git rm -rf --quiet .
           cp "$RUNNER_TEMP/float-release/"* .
-          git add float.js manifest.json preview.svg README.md
+          git add float.js manifest.json preview.png README.md
           git commit -m "build: publish FLOAT for Spicetify Marketplace"
           git push --force origin HEAD:marketplace
