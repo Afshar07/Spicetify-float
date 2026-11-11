@@ -1,0 +1,50 @@
+name: Publish Marketplace bundle
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'vite.config.ts'
+      - 'tsconfig.json'
+      - 'README.md'
+      - 'manifest.json'
+      - 'preview.svg'
+      - '.github/workflows/marketplace.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: float-marketplace
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Publish self-contained extension to marketplace branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s dist/float.js
+          mkdir -p "$RUNNER_TEMP/float-release"
+          cp dist/float.js manifest.json preview.svg README.md "$RUNNER_TEMP/float-release/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan marketplace
+          git rm -rf --quiet .
+          cp "$RUNNER_TEMP/float-release/"* .
+          git add float.js manifest.json preview.svg README.md
+          git commit -m "build: publish FLOAT for Spicetify Marketplace"
+          git push --force origin HEAD:marketplace
