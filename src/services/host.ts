@@ -78,7 +78,7 @@ export function openInlineHost(css: string): IFloatHost {
     kind: EHostKind.Inline,
     window,
     root,
-    compactSize: { width: 216, height: 48 },
+    compactSize: { width: 136, height: 36 },
     resize({ width, height }) {
       root.style.width = `${width}px`
       root.style.height = `${height}px`

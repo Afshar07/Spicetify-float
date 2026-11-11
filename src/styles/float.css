@@ -233,49 +233,37 @@ html:has(> body > .float-root--pip) > body {
   object-fit: cover;
 }
 
-/* ---------- Compact dock: 216 × 48 ---------- */
+/* ---------- Compact dock: 136 × 36, monochrome ---------- */
 
+/* No artwork, divider, border or shadow: four controls on a near-black pill. */
 .fl-dock {
-  position: relative;
+  --fl-dock-surface: #131313;
+  --fl-dock-hover: #242424;
+  --fl-dock-icon: #f0f0f0;
+
   display: flex;
   flex: none;
-  gap: 4px;
   align-items: center;
-  width: 216px;
-  height: 48px;
-  padding-left: 9px;
-  border: 1px solid var(--fl-edge);
+  width: 136px;
+  height: 36px;
+  padding: 0 4px;
   border-radius: 999px;
-  background: var(--fl-surface);
-  filter: drop-shadow(0 8px 12px rgb(0 0 0 / 24%));
+  background: var(--fl-dock-surface);
   animation: fl-enter var(--fl-expand) ease-out;
 }
 
-.fl-dock .fl-art {
-  width: 28px;
-  height: 28px;
+.float-root .fl-dock .fl-btn {
+  color: var(--fl-dock-icon);
 }
 
-.fl-dock.is-idle .fl-art {
-  opacity: 0.35;
+.float-root .fl-dock .fl-btn:hover:not(:disabled) {
+  background: var(--fl-dock-hover);
 }
 
-.fl-dock__divider {
-  width: 1px;
-  height: 16px;
-  margin: 0 7px 0 4px;
-  background: var(--fl-edge);
-}
-
-/* Non-color cue that audio is playing. */
-.fl-dock__indicator {
-  position: absolute;
-  top: 38px;
-  left: 11px;
-  width: 24px;
-  height: 2px;
-  border-radius: 1px;
-  background: var(--fl-accent);
+/* The dock's focus ring is white; teal is reserved for the expanded player. */
+.float-root .fl-dock .fl-btn:focus-visible {
+  outline-color: #fff;
+  outline-offset: -2px;
 }
 
 /* ---------- Shared text styles ---------- */

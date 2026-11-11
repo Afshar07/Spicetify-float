@@ -3,7 +3,7 @@
 A quiet desktop companion for Spotify, built as a [Spicetify](https://spicetify.app) extension.
 One small always-on-top dock, and a little more room for the words when you want them.
 
-- **Floating dock** — artwork, Previous, Play/Pause, Next, Expand (216 × 48).
+- **Floating dock** — Previous, Play/Pause, Next, Expand on a 136 × 36 monochrome pill.
 - **Always on top** — runs in a Document Picture-in-Picture window, so it stays above other apps.
 - **Expanded player** — album art, track details, seek bar, shuffle/repeat and synchronized lyrics.
 - **Two layouts** — wide (≥ 640 px, default 760 × 436) and narrow, lyrics-first (< 640 px, e.g. 320 × 520).
@@ -35,7 +35,7 @@ Remove it with `pnpm spicetify:uninstall`.
 Click the **Float player** button in Spotify's top bar, or press **Ctrl+M** while Spotify or the FLOAT
 window has focus. Do the same again (or close the window) to dismiss.
 
-- **Move** — drag the window by any empty part of its surface (the artwork, the header, the space
+- **Move** — drag the window by any empty part of its surface (the artwork and header when expanded, the space
   around the dock), or by its title bar.
 
 - **Expand / Collapse** — the arrows button in the dock and in the player's top-right corner.
@@ -106,7 +106,7 @@ document shares no styles or fonts with Spotify.
 - **The window frame belongs to the browser.** Document PiP windows always have a native title bar
   and close button; they cannot be frameless or transparent, and the page cannot position them.
   Dragging by the surface relies on `-webkit-app-region`, which Spotify's Chromium honours in PiP
-  windows; buttons, the seek bar and the lyric list are excluded so they stay clickable. The 216 × 48 dock is therefore drawn centered inside a small window, not as a bare pill on
+  windows; buttons, the seek bar and the lyric list are excluded so they stay clickable. The 136 × 36 dock is therefore drawn centered inside a small window, not as a bare pill on
   the desktop.
 - **Minimum size is browser-defined.** FLOAT requests a 272 × 84 viewport for the dock and accepts
   whatever Chromium allows. Below 300 × 280 the expanded player falls back to the dock rather than
