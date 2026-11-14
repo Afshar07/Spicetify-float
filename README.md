@@ -1,5 +1,7 @@
 # FLOAT
 
+![FLOAT preview](preview.png)
+
 A quiet desktop companion for Spotify, built as a [Spicetify](https://spicetify.app) extension.
 One small always-on-top dock, and a little more room for the words when you want them.
 
