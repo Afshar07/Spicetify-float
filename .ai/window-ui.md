@@ -31,7 +31,9 @@
 - `float:prefs` stores `{ view, expanded: { width, height } }` in localStorage.
   Invalid/unavailable storage falls back to compact with default expanded size.
 - Only valid expanded PiP dimensions are remembered, with a 300 ms debounce
-  after a 1 s opening settlement period. Collapsing cancels pending size saves.
+  after a 1 s opening settlement period. A one-time sample after settlement
+  captures the final opening dimensions even without another resize event.
+  Pending valid size snapshots are flushed on collapse and unmount.
 - Expanded UI uses one DOM order for both wide and narrow CSS layouts.
   Lyrics mount only in the expanded player.
 - Styles and the Latin Inter font are injected into each host. Do not rely on
@@ -62,7 +64,38 @@
 - For dimming, verify toggle/restore with mouse and keyboard, both expanded
   layouts, readable header actions, and reset after collapse/close.
 
+## Lyrics-only mode
+
+- This is separate from the compact transport dock: a component-local
+  `lyricsOnly` toggle in `ExpandedPlayer.vue`, using `assets/icons/lyrics-only.svg`.
+- It hides the player eyebrow, artwork/metadata, seek bar, and transport.
+  Only the lyrics section and one corner Restore player button remain.
+  The lyrics heading, source badge, Live/Resume live, and status messages remain.
+- The same toggle button stays mounted and exposes its pressed state. Other
+  header actions are hidden in lyrics-only mode; restore returns them.
+- No host resize, preference schema change, or lyric refetch occurs on toggle.
+  Dimming remains in effect if already enabled. Mode resets on collapse/close.
+- `LyricsView` receives `lyricsOnly` to recenter after the viewport changes only
+  when following; manual browsing is preserved.
+- Check both layouts/hosts, toggle with keyboard, dim then toggle/restore,
+  synced/unsynced/unavailable states, and unchanged outer window dimensions.
+
 ## Latest change verification
 
 - Manual dim toggle and LRCLIB badge: `pnpm build` (including typechecking)
   passed during implementation. Visual/runtime checks in Spotify were not run.
+- Lyrics-only mode: `pnpm build` passed; Spotify minimize/restore and visual
+  runtime verification remain pending.
+
+## Size persistence investigation
+
+- Code inspection found two persistence gaps: opening resize events were
+  ignored without a later sample, and unmount discarded debounced resize saves.
+  `useLayout.ts` now samples after opening and flushes the last valid pending
+  snapshot on collapse/close.
+- No application handler explicitly resizes PiP when Spotify is minimized.
+  The reported minimize-specific behavior has not been reproduced or confirmed
+  fixed. Chromium can still clamp/ignore size requests; distinguish real PiP
+  from the inline fallback, whose bounds depend on Spotify's viewport.
+- Verify resize then immediate close/reopen, collapse/expand, initial clamped
+  dimensions, and minimizing/restoring Spotify with a real PiP window.

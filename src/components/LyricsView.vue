@@ -4,7 +4,7 @@ import { useLyrics } from '../composables/useLyrics'
 import { usePlayback } from '../composables/usePlayback'
 import { ELayout, ELyricsStatus } from '../types/float'
 
-const props = defineProps<{ layout: ELayout }>()
+const props = defineProps<{ layout: ELayout; lyricsOnly?: boolean }>()
 
 const { track, seekTo } = usePlayback()
 const { lyrics, status, activeIndex } = useLyrics()
@@ -82,6 +82,12 @@ watch([lyrics, () => props.layout], async () => {
   following.value = true
   await nextTick()
   centerActiveLine(false)
+}, { flush: 'post' })
+
+// Mode switches change the viewport without remounting or refetching lyrics.
+watch(() => props.lyricsOnly, async () => {
+  await nextTick()
+  if (following.value) centerActiveLine(false)
 }, { flush: 'post' })
 
 onMounted(() => centerActiveLine(false))

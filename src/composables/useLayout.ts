@@ -21,17 +21,24 @@ export function useLayout(host: IFloatHost) {
   })
 
   let saveTimer = 0
-  const settledAt = performance.now() + SETTLE_MS
+  let pendingSize: ISize | null = null
+  let settled = false
+
+  function flushExpandedSize(): void {
+    host.window.clearTimeout(saveTimer)
+    if (!pendingSize) return
+    prefs.expanded = pendingSize
+    pendingSize = null
+    savePrefs(prefs)
+  }
 
   function rememberExpandedSize(): void {
     // Only a window the user can resize carries a size preference.
     if (host.kind !== EHostKind.Pip || prefs.view !== EView.Expanded || !isExpandedSize(size)) return
-    if (performance.now() < settledAt) return
+    if (!settled) return
     host.window.clearTimeout(saveTimer)
-    saveTimer = host.window.setTimeout(() => {
-      prefs.expanded = { width: Math.round(size.width), height: Math.round(size.height) }
-      savePrefs(prefs)
-    }, SAVE_DELAY_MS)
+    pendingSize = { width: Math.round(size.width), height: Math.round(size.height) }
+    saveTimer = host.window.setTimeout(flushExpandedSize, SAVE_DELAY_MS)
   }
 
   // Observe with the host window's own constructor: the root lives there.
@@ -45,9 +52,20 @@ export function useLayout(host: IFloatHost) {
   })
   observer.observe(host.root)
 
+  // Opening resize events are deliberately ignored, so sample once settled
+  // even if the browser never sends another event.
+  const settleTimer = host.window.setTimeout(() => {
+    settled = true
+    const box = host.root.getBoundingClientRect()
+    size.width = box.width
+    size.height = box.height
+    rememberExpandedSize()
+  }, SETTLE_MS)
+
   onBeforeUnmount(() => {
     observer.disconnect()
-    host.window.clearTimeout(saveTimer)
+    host.window.clearTimeout(settleTimer)
+    flushExpandedSize()
   })
 
   function expand(): void {
@@ -58,7 +76,7 @@ export function useLayout(host: IFloatHost) {
   }
 
   function collapse(): void {
-    host.window.clearTimeout(saveTimer)
+    flushExpandedSize()
     prefs.view = EView.Compact
     savePrefs(prefs)
     host.resize(host.compactSize)

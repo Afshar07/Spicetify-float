@@ -41,6 +41,9 @@ window has focus. Do the same again (or close the window) to dismiss.
   around the dock), or by its title bar.
 
 - **Expand / Collapse** — the arrows button in the dock and in the player's top-right corner.
+- **Lyrics only** — the three-lines button beside the dim/collapse buttons hides
+  track details and playback controls without resizing the window. The corner
+  **Restore player** button brings them back. This mode resets on collapse or close.
 - **Wide vs narrow** — drag the window's edge. Under 640 px wide it becomes the narrow, lyrics-first
   layout; the size is remembered for next time.
 - **Lyrics** — the current line stays centered. Scroll to browse; a **Resume live** button brings you

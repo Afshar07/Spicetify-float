@@ -769,6 +769,42 @@ html:has(> body > .float-root--pip) > body {
   display: none;
 }
 
+/* Lyrics-only keeps the host size and the same live lyrics component. */
+.fl-player.fl-player--lyrics-only {
+  position: relative;
+  grid-template: 'lyrics' minmax(0, 1fr) / minmax(0, 1fr);
+  padding: 20px;
+}
+
+.fl-player--lyrics-only > .fl-player__eyebrow,
+.fl-player--lyrics-only > .fl-player__now,
+.fl-player--lyrics-only > .fl-player__transport {
+  display: none;
+}
+
+.fl-player--lyrics-only > .fl-player__actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  margin: 0;
+}
+
+.fl-player--lyrics-only > .fl-lyrics {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fl-player--lyrics-only > .fl-lyrics::before {
+  display: none;
+}
+
+.fl-player--lyrics-only .fl-lyrics__head {
+  margin-top: 0;
+  padding: 0 40px 0 0;
+}
+
 /* ---------- Motion ---------- */
 
 @keyframes fl-enter {
