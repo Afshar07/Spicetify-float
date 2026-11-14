@@ -59,6 +59,7 @@ export interface ILyricLine {
 }
 
 export interface ILyrics {
+  source?: 'lrclib'
   synced: boolean
   lines: ILyricLine[]
 }

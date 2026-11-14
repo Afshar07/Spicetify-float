@@ -90,7 +90,12 @@ onMounted(() => centerActiveLine(false))
 <template>
   <section class="fl-lyrics" aria-label="Lyrics">
     <header class="fl-lyrics__head">
-      <span class="fl-caption">Lyrics</span>
+      <div class="fl-lyrics__heading">
+        <span v-if="lyrics?.source === 'lrclib'" class="fl-lyrics__source" aria-label="Lyrics from LRCLIB">
+          LRCLIB
+        </span>
+        <span class="fl-caption">Lyrics</span>
+      </div>
       <template v-if="isSynced">
         <span v-if="following" class="fl-lyrics__live">Live</span>
         <button v-else type="button" class="fl-lyrics__resume" @click="resumeFollowing">

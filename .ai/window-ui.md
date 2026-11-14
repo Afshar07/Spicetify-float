@@ -42,8 +42,27 @@
 - Ctrl+M toggles FLOAT from Spotify or the PiP window; it is not system-wide.
 - Within FLOAT: Space toggles playback, left/right seek ±5 s, Escape collapses.
   Preserve text-entry exclusions and native Space activation on buttons.
+- Expanded player has a manual Dim player / Restore brightness toggle beside
+  Collapse. It fades content to 40% opacity without changing playback, lyric
+  following, or native window opacity. Header actions remain fully visible.
+  Dimming is component-local and resets on collapse or close; no idle timer or
+  persisted preference is used.
+- Implementation: `ExpandedPlayer.vue` owns the `dimmed` ref and
+  `.fl-player__actions`; `src/assets/icons/dim.svg` supplies the toggle icon.
+  CSS dims direct player children except the actions via `.fl-player--dimmed`.
+  Both wide/narrow layouts and PiP/inline hosts share this behavior.
+- The dim toggle exposes `aria-pressed`, an active accent, and a state-dependent
+  label. It remains keyboard accessible and does not restore brightness merely
+  on hover/focus. Reduced-motion styling removes the opacity transition.
 - Preserve labels, focus behavior, seek range semantics, reduced-motion support,
   and non-draggable interactive regions when changing UI.
 - Check close/reopen via launcher, shortcut, and native PiP close; resize across
   thresholds; verify persistence and inline fallback. Real PiP behavior needs
   Spotify/Chromium verification, not just a successful bundle.
+- For dimming, verify toggle/restore with mouse and keyboard, both expanded
+  layouts, readable header actions, and reset after collapse/close.
+
+## Latest change verification
+
+- Manual dim toggle and LRCLIB badge: `pnpm build` (including typechecking)
+  passed during implementation. Visual/runtime checks in Spotify were not run.

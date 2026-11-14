@@ -27,6 +27,12 @@
 - Spotify lines use millisecond timestamps; `UNSYNCED` has no active highlighting.
 - LRC supports multiple timestamps per line and sorts parsed lines by start time.
   Plain lyrics remain unsynced.
+- LRCLIB results carry `source: 'lrclib'`, retained in the last-result cache;
+  other results leave it unset. The header shows an LRCLIB badge before Lyrics
+  only when the displayed result comes from LRCLIB (synced or unsynced).
+  There is deliberately no Spotify badge or `'spotify'` source value.
+  Provider selection is unchanged: merely attempting LRCLIB must not show its
+  badge if the result ultimately displayed comes from Spotify.
 - `useLyrics` caches only the last track result (including null), keyed by URI.
   It ignores a response for display if the current track URI has changed.
   Requests are not currently aborted; do not document this as cancellation.
@@ -40,6 +46,11 @@
   suspend following; Resume live restores it. Selecting a synced line seeks.
 - New lyrics or layout changes reset following. Reduced-motion preference
   disables smooth centering. Unsynced lines do not seek.
+- The Lyrics heading is always present. Live appears only for synced lyrics
+  while following, and becomes Resume live after manual scrolling; neither
+  indicator identifies a provider.
+- For the source badge, check LRCLIB synced/plain results, Spotify results,
+  loading/unavailable states, track changes, and cached collapse/re-expand.
 - Check synced, unsynced, unavailable, no-track, and loading states; rapid track
   changes; collapse/re-expand cache reuse; manual scrolling/resume; and reduced
   motion. External provider availability needs real runtime verification.

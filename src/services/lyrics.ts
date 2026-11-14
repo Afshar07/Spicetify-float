@@ -24,9 +24,9 @@ function trimBlankEdges(lines: ILyricLine[]): ILyricLine[] {
   return lines.slice(start, end)
 }
 
-function toLyrics(lines: ILyricLine[], synced: boolean): ILyrics | null {
+function toLyrics(lines: ILyricLine[], synced: boolean, source?: ILyrics['source']): ILyrics | null {
   const trimmed = trimBlankEdges(lines)
-  return trimmed.length ? { synced, lines: trimmed } : null
+  return trimmed.length ? { source, synced, lines: trimmed } : null
 }
 
 function parseSpotify(body: unknown): ILyrics | null {
@@ -53,13 +53,14 @@ function parseLrc(lrc: string): ILyrics | null {
     }
   }
   lines.sort((a, b) => a.startMs - b.startMs)
-  return toLyrics(lines, true)
+  return toLyrics(lines, true, 'lrclib')
 }
 
 function parsePlain(text: string): ILyrics | null {
   return toLyrics(
     text.split('\n').map((line) => ({ startMs: 0, text: line.trim() })),
     false,
+    'lrclib',
   )
 }
 

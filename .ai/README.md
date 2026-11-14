@@ -10,9 +10,9 @@ step 7, then follow the route exactly in order.
 | --- | --- |
 | `ongoing/README.md` | continuing an in-progress task; read only the matching task document |
 | `technical-debt/README.md` | locating unresolved technical debt relevant to the current work; read only the matching record |
-| `window-ui.md` | changing window lifecycle, layout, preferences, styles, or controls |
+| `window-ui.md` | changing window lifecycle, layout, preferences, styles, controls, or manual dimming |
 | `playback.md` | changing player state, metadata, or transport behavior |
-| `lyrics.md` | changing lyric providers, parsing, synchronization, or scrolling |
+| `lyrics.md` | changing lyric providers, LRCLIB badge, parsing, synchronization, or scrolling |
 | `delivery.md` | changing build output, installation, or Marketplace publication |
 
 ## Rules

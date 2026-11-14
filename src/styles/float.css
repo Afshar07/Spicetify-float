@@ -322,10 +322,20 @@ html:has(> body > .float-root--pip) > body {
   color: var(--fl-secondary);
 }
 
-.fl-player__collapse {
+.fl-player__actions {
+  display: flex;
+  gap: 4px;
   grid-area: collapse;
   align-self: start;
   justify-self: end;
+}
+
+.fl-player > :not(.fl-player__actions) {
+  transition: opacity var(--fl-expand);
+}
+
+.fl-player--dimmed > :not(.fl-player__actions) {
+  opacity: 0.4;
 }
 
 .fl-player__transport {
@@ -424,7 +434,7 @@ html:has(> body > .float-root--pip) > body {
   line-height: 17px;
 }
 
-.fl-player--narrow .fl-player__collapse {
+.fl-player--narrow .fl-player__actions {
   margin: -2px -4px 0 8px;
 }
 
@@ -539,6 +549,23 @@ html:has(> body > .float-root--pip) > body {
   align-items: center;
   justify-content: space-between;
   height: 15px;
+}
+
+.fl-lyrics__heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fl-lyrics__source {
+  padding: 0 5px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--fl-edge);
+  color: var(--fl-secondary);
+  font-weight: 500;
+  font-size: 9px;
+  line-height: 15px;
+  white-space: nowrap;
 }
 
 .fl-lyrics__live,
