@@ -146,6 +146,7 @@ html:has(> body > .float-root--pip) > body {
 .fl-icon {
   width: 18px;
   height: 18px;
+  pointer-events: none;
   background: currentColor;
   -webkit-mask: var(--fl-icon) center / 18px 18px no-repeat;
   mask: var(--fl-icon) center / 18px 18px no-repeat;
@@ -835,6 +836,7 @@ html:has(> body > .float-root--pip) > body {
 }
 
 .float-root--pip .fl-btn,
+.float-root--pip .fl-btn *,
 .float-root--pip .fl-seek,
 .float-root--pip .fl-lyrics__scroll,
 .float-root--pip .fl-lyrics__resume {
