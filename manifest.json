@@ -1,0 +1,21 @@
+[
+  {
+    "name": "FLOAT",
+    "description": "A minimal always-on-top Spotify player with playback controls and synchronized lyrics.",
+    "preview": "preview.png",
+    "main": "float.js",
+    "readme": "README.md",
+    "branch": "marketplace",
+    "authors": [
+      {
+        "name": "Afshar07",
+        "url": "https://github.com/Afshar07"
+      }
+    ],
+    "tags": [
+      "player",
+      "lyrics",
+      "miniplayer"
+    ]
+  }
+]
